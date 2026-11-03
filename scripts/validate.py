@@ -108,6 +108,33 @@ def verify():
         txt = (ROOT / page).read_text(encoding="utf-8")
         if "https://" not in txt:
             errors.append(f"Evidence URLs absent: {page}")
+    # OG IMAGE INTEGRITY: the preview must exist as an actual PNG in the repository.
+    preview_path = ROOT / "og" / "caringaged-share.png"
+    if not preview_path.is_file():
+        errors.append("Open Graph PNG missing: og/caringaged-share.png")
+    else:
+        raw = preview_path.read_bytes()
+        if raw[:8] != b"\\x89PNG\\r\\n\\x1a\\n":
+            errors.append("Open Graph image is not a valid PNG")
+        elif len(raw) < 24:
+            errors.append("Open Graph PNG is truncated")
+        else:
+            width = int.from_bytes(raw[16:20], "big")
+            height = int.from_bytes(raw[20:24], "big")
+            if (width, height) != (1200, 630):
+                errors.append(f"Open Graph dimensions unexpected: {width}x{height}")
+    for path in PAGES.values():
+        markup = path.read_text(encoding="utf-8")
+        if 'https://caringaged.com/og/caringaged-share.png' not in markup:
+            errors.append(f"Missing OG image reference: {path.relative_to(ROOT)}")
+    acquisition_html = (ROOT / "acquire" / "index.html").read_text(encoding="utf-8")
+    if 'https://www.dynadot.com/fr/market/user-listings/caringaged.com' not in acquisition_html:
+        errors.append("Direct Dynadot purchase CTA missing")
+    if 'agent@sohadot.com' not in acquisition_html or 'Escrow' not in acquisition_html:
+        errors.append("Direct contact or escrow option missing")
+    homepage_html = (ROOT / "index.html").read_text(encoding="utf-8")
+    if 'https://www.dynadot.com/fr/market/user-listings/caringaged.com' not in homepage_html:
+        errors.append("Home acquisition section is missing direct Dynadot link")
     if errors:
         print("QUALITY GATE FAILED")
         for error in errors:
