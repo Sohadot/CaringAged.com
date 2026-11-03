@@ -10,6 +10,7 @@ CaringAged is **an independent educational concept**, not a care provider, a hea
 - `/sources/`: Primary-source bibliography, editorial approach, geographic limitations and disclaimers.
 - `/acquire/`: Separate, non-indexable strategic acquisition page. **Do not put this URL in a sitemap.**
 - `/robots.txt` and `/sitemap.xml`: crawl discovery and indexation scope.
+- `/og/caringaged-share.png`: 1200 × 630 PNG social-preview artwork; generated from `scripts/generate_og.py` and referenced by Open Graph/Twitter metadata.
 
 ## Evidence and accuracy
 
@@ -32,7 +33,9 @@ Before making the public site live:
 2. Confirm `agent@sohadot.com` is the intended acquisition contact.
 3. Review medical-context disclaimers and any relevant trademarks for the chosen operating markets.
 4. Verify `/acquire/` returns `noindex,follow` and is excluded from the sitemap.
-5. Open all internal links, run responsive and keyboard checks, and update evidence dates when content is substantively re-reviewed.
+5. Verify the current Dynadot listing URL resolves and is purchasable; escrow is only an option by agreement.
+6. Confirm `/og/caringaged-share.png` resolves as a public `image/png` over HTTPS and renders in share debuggers.
+7. Open all internal links, run responsive and keyboard checks, and update evidence dates when content is substantively re-reviewed.
 
 ## Review boundary
 
