@@ -114,7 +114,7 @@ def verify():
         errors.append("Open Graph PNG missing: og/caringaged-share.png")
     else:
         raw = preview_path.read_bytes()
-        if raw[:8] != b"\\x89PNG\\r\\n\\x1a\\n":
+        if raw[:8] != b"\x89PNG\r\n\x1a\n":
             errors.append("Open Graph image is not a valid PNG")
         elif len(raw) < 24:
             errors.append("Open Graph PNG is truncated")
