@@ -1,0 +1,37 @@
+name: Generate social preview artwork
+on:
+  push:
+    branches:
+      - feat/concept-first-care-landing
+    paths:
+      - scripts/generate_og.py
+      - .github/workflows/render-og.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render-social-preview:
+    if: github.repository == 'Sohadot/CaringAged.com'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install graphics dependency
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - name: Generate sharing image
+        run: python scripts/generate_og.py
+      - name: Commit PNG into review branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add og/caringaged-share.png
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: add CaringAged social share image [skip ci]"
+            git push origin HEAD:feat/concept-first-care-landing
+          fi
